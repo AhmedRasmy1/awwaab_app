@@ -1,8 +1,12 @@
 import 'package:awwaab_app/core/res/app_theme.dart';
+import 'package:awwaab_app/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(const Awwaab());
 }
 
@@ -25,7 +29,7 @@ class Awwaab extends StatelessWidget {
       },
       title: 'Awwaab App',
       theme: AppTheme.lightTheme,
-      home: const HomePage(),
+      home: const CustomSplashScreen(),
     );
   }
 }
