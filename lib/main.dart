@@ -1,3 +1,4 @@
+import 'package:awwaab_app/core/res/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -23,15 +24,7 @@ class Awwaab extends StatelessWidget {
         return Directionality(textDirection: TextDirection.rtl, child: child!);
       },
       title: 'Awwaab App',
-      theme: ThemeData(
-        fontFamily: 'Cairo',
-        textTheme: const TextTheme(
-          headlineLarge: TextStyle(fontWeight: FontWeight.w700),
-          headlineMedium: TextStyle(fontWeight: FontWeight.w600),
-          bodyLarge: TextStyle(fontWeight: FontWeight.w400),
-          bodyMedium: TextStyle(fontWeight: FontWeight.w400),
-        ),
-      ),
+      theme: AppTheme.lightTheme,
       home: const HomePage(),
     );
   }
