@@ -77,3 +77,9 @@ flutter:
           weight: 600
         - asset: assets/fonts/Cairo-Bold.ttf
           weight: 700
+    - family: ArefRuqaa
+      fonts:
+        - asset: assets/fonts/ArefRuqaa-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/ArefRuqaa-Bold.ttf
+          weight: 700      

@@ -1,5 +1,8 @@
+import 'package:awwaab_app/core/res/app_constants.dart';
 import 'package:awwaab_app/core/res/app_theme.dart';
-import 'package:awwaab_app/splash_screen.dart';
+import 'package:awwaab_app/core/res/color_manager.dart';
+import 'package:awwaab_app/core/res/routes_manager.dart';
+import 'package:awwaab_app/core/res/values_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -16,6 +19,8 @@ class Awwaab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateRoute: RouteGenerator.getRoute,
+      initialRoute: RoutesManager.initialRoute,
       debugShowCheckedModeBanner: false,
       locale: const Locale('ar'),
       supportedLocales: const [Locale('ar')],
@@ -29,7 +34,6 @@ class Awwaab extends StatelessWidget {
       },
       title: 'Awwaab App',
       theme: AppTheme.lightTheme,
-      home: const CustomSplashScreen(),
     );
   }
 }
@@ -40,7 +44,21 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('أَوَّابٌ')),
+      appBar: AppBar(
+        title: const Text(AppConstants.appNameArabic),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.settings_outlined,
+              color: ColorManager.settingsIcon,
+              size: AppSize.s24,
+            ),
+            onPressed: () {
+              // Action for home button
+            },
+          ),
+        ],
+      ),
       body: const Center(child: Text('مرحبًا بك في تطبيق أَوَّابٌ!')),
     );
   }

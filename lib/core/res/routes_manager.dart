@@ -1,12 +1,19 @@
+import 'package:awwaab_app/main.dart';
+import 'package:awwaab_app/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 class RoutesManager {
   static const String initialRoute = '/';
+  static const String homePageRoute = '/home';
 }
 
 class RouteGenerator {
   static Route<dynamic> getRoute(RouteSettings settings) {
     switch (settings.name) {
+      case RoutesManager.initialRoute:
+        return MaterialPageRoute(builder: (_) => const CustomSplashScreen());
+      case RoutesManager.homePageRoute:
+        return MaterialPageRoute(builder: (_) => const HomePage());
       default:
         return unDefinedRoute();
     }

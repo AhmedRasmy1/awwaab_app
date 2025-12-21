@@ -19,12 +19,11 @@ class AppTheme {
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      centerTitle: true,
       titleTextStyle: TextStyle(
-        fontSize: 18,
+        fontSize: 25,
         fontWeight: FontWeight.w600,
         color: ColorManager.textPrimary,
-        fontFamily: AppTypography.fontFamily,
+        fontFamily: AppTypography.arabicFontFamily,
       ),
       iconTheme: IconThemeData(color: ColorManager.primary),
     ),

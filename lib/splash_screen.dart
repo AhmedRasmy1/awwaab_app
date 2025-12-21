@@ -1,3 +1,4 @@
+import 'package:awwaab_app/core/res/routes_manager.dart';
 import 'package:awwaab_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -15,10 +16,7 @@ class _CustomSplashScreenState extends State<CustomSplashScreen> {
     super.initState();
     FlutterNativeSplash.remove();
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+      Navigator.pushReplacementNamed(context, RoutesManager.homePageRoute);
     });
   }
 
