@@ -42,12 +42,5 @@ class CacheService {
 }
 
 class CacheConstants {
-  // static const String userToken = "userToken";
-  // static const String role = "role";
-  // static const String userEmail = "userEmail";
-  // static const String userType = "userType";
-  // static const String technichianService = 'technichianService';
-  // static const String serviceId = 'serviceId';
-  // static const String technicalId = 'TechnichianId';
-  // static const String orderId = 'orderId';
+  static const String themeMode = 'themeMode';
 }

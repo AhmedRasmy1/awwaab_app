@@ -32,23 +32,36 @@ class _FontSizeSettingsCardState extends State<FontSizeSettingsCard> {
 
   @override
   Widget build(BuildContext context) {
+    // 1. تحديد الوضع الحالي
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
 
-    final double padding = screenWidth * 0.05; // 5% of screen width
-    final double iconSize = screenWidth * 0.1; // 10% of screen width
-    final double fontSizeLabel = screenWidth * 0.04; // 4% of screen width
+    final double padding = screenWidth * 0.05;
+    final double iconSize = screenWidth * 0.1;
+    final double fontSizeLabel = screenWidth * 0.04;
 
-    final Color primaryColor = const Color(0xFF1F3C2E);
-    final Color circleBG = const Color(0xFFE8ECE9);
+    // 2. ألوان متغيرة حسب الثيم
+    final Color primaryColor = Theme.of(context).primaryColor; // الأخضر بتاعنا
+    final Color cardColor = isDark
+        ? Theme.of(context).cardTheme.color!
+        : Colors.white;
+    final Color borderColor = isDark ? Colors.white12 : Colors.grey.shade300;
+
+    final Color circleBG = isDark ? Colors.white10 : const Color(0xFFE8ECE9);
+    final Color iconColor = isDark ? Colors.white : const Color(0xFF1F3C2E);
+    final Color textColor = isDark ? Colors.white : Colors.black87;
+    final Color subTextColor = isDark
+        ? Colors.grey.shade400
+        : Colors.grey.shade600;
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: padding),
       padding: EdgeInsets.all(padding),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor, // متغير
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.shade300, width: 1),
+        border: Border.all(color: borderColor, width: 1), // متغير
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -59,14 +72,14 @@ class _FontSizeSettingsCardState extends State<FontSizeSettingsCard> {
                 width: iconSize,
                 height: iconSize,
                 decoration: BoxDecoration(
-                  color: circleBG,
+                  color: circleBG, // متغير
                   shape: BoxShape.circle,
                 ),
                 child: Center(
                   child: Icon(
                     Icons.text_fields_rounded,
-                    color: primaryColor,
-                    size: iconSize * 0.5, // 50% of icon size
+                    color: iconColor, // متغير
+                    size: iconSize * 0.5,
                   ),
                 ),
               ),
@@ -81,15 +94,14 @@ class _FontSizeSettingsCardState extends State<FontSizeSettingsCard> {
                       style: TextStyle(
                         fontSize: fontSizeLabel,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        color: textColor, // متغير
                       ),
                     ),
                     Text(
                       _getFontSizeLabel(_currentFontSize),
                       style: TextStyle(
-                        fontSize:
-                            fontSizeLabel * 0.75, // 75% of label font size
-                        color: Colors.grey.shade600,
+                        fontSize: fontSizeLabel * 0.75,
+                        color: subTextColor, // متغير
                       ),
                     ),
                   ],
@@ -99,13 +111,16 @@ class _FontSizeSettingsCardState extends State<FontSizeSettingsCard> {
           ),
 
           SizedBox(height: padding),
+
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
               activeTrackColor: primaryColor,
-              inactiveTrackColor: circleBG,
+              inactiveTrackColor: isDark
+                  ? Colors.grey.shade800
+                  : const Color(0xFFE8ECE9), // تظبيط لون التراك
               thumbColor: Colors.white,
               thumbShape: RoundSliderThumbShape(
-                enabledThumbRadius: iconSize * 0.3, // 30% of icon size
+                enabledThumbRadius: iconSize * 0.3,
                 elevation: 2,
               ),
               overlayColor: primaryColor.withOpacity(0.1),
@@ -132,7 +147,7 @@ class _FontSizeSettingsCardState extends State<FontSizeSettingsCard> {
               'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
               style: TextStyle(
                 fontSize: _currentFontSize,
-                color: Colors.black87,
+                color: textColor, // متغير عشان يبان
               ),
               textAlign: TextAlign.center,
             ),
