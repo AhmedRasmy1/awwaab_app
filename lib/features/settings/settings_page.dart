@@ -1,9 +1,9 @@
-import 'package:awwaab_app/about_app_card.dart';
+import 'package:awwaab_app/features/settings/widgets/about_app_card.dart';
 import 'package:awwaab_app/core/res/app_constants.dart';
 import 'package:awwaab_app/core/res/color_manager.dart';
 import 'package:awwaab_app/core/res/values_manager.dart';
-import 'package:awwaab_app/font_size_setting_card.dart';
-import 'package:awwaab_app/settings_item.dart';
+import 'package:awwaab_app/features/settings/widgets/font_size_setting_card.dart';
+import 'package:awwaab_app/features/settings/widgets/settings_item.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {

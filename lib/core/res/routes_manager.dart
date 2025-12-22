@@ -1,5 +1,5 @@
 import 'package:awwaab_app/bottom_navigation_bar_widget.dart';
-import 'package:awwaab_app/settings_page.dart';
+import 'package:awwaab_app/features/settings/settings_page.dart';
 import 'package:awwaab_app/splash_screen.dart';
 import 'package:flutter/material.dart';
 
