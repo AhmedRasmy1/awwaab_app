@@ -15,6 +15,9 @@ class AppConstants {
   static const String disabledArabic = "مُعطّل";
   static const String enabledArabic = "مُفعّل";
   static const String readingArabic = "القراءة";
+  static const String fontSizeArabic = "حجم الخط";
+  static const String notificationsArabic = "الإشعارات";
+  static const String aboutAppArabic = "عن التطبيق";
 }
 
 final List<Widget> screens = [

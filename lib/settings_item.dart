@@ -1,15 +1,12 @@
 import 'package:awwaab_app/core/res/color_manager.dart';
 import 'package:flutter/material.dart';
-// متنساش تعمل import لملفات الـ Managers بتاعتك هنا
-// import 'package:awwaab_app/core/res/color_manager.dart';
-// import 'package:awwaab_app/core/res/values_manager.dart';
 
 class SettingsItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final String? subtitle;
-  final Widget? trailing; // العنصر اللي في الآخر (سويتش، سهم، إلخ)
-  final VoidCallback? onTap; // لما تدوس عليها يحصل إيه
+  final Widget? trailing;
+  final VoidCallback? onTap;
 
   const SettingsItem({
     super.key,
@@ -27,13 +24,15 @@ class SettingsItem extends StatelessWidget {
     final Color borderColor = Colors.grey.shade300;
     final double borderRadius = 20.0;
 
+    // Get screen width
+    final double screenWidth = MediaQuery.of(context).size.width;
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
-        color: Colors.white, // خلفية الكارت
+        color: Colors.white,
         borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(color: borderColor, width: 1),
-        // ممكن تضيف BoxShadow هنا لو عايز ضل خفيف
       ),
       child: Material(
         color: Colors.transparent,
@@ -41,16 +40,22 @@ class SettingsItem extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(borderRadius),
           child: Padding(
-            padding: const EdgeInsets.all(16.0), // حشوة داخلية
+            padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: EdgeInsets.all(
+                    screenWidth * 0.025,
+                  ), // Responsive padding
                   decoration: BoxDecoration(
                     color: iconBGColor,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(icon, color: iconColor, size: 24),
+                  child: Icon(
+                    icon,
+                    color: iconColor,
+                    size: screenWidth * 0.06,
+                  ), // Responsive icon size
                 ),
                 const SizedBox(width: 16.0),
                 Expanded(
@@ -59,8 +64,8 @@ class SettingsItem extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
-                          fontSize: 16,
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.04, // Responsive font size
                           fontWeight: FontWeight.bold,
                           color: ColorManager.textPrimary,
                         ),
@@ -70,7 +75,8 @@ class SettingsItem extends StatelessWidget {
                         Text(
                           subtitle!,
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize:
+                                screenWidth * 0.035, // Responsive font size
                             color: ColorManager.textSecondary,
                           ),
                         ),
@@ -78,8 +84,6 @@ class SettingsItem extends StatelessWidget {
                     ],
                   ),
                 ),
-
-                // 3. العنصر الأخير (Switch مثلاً)
                 if (trailing != null) trailing!,
               ],
             ),
