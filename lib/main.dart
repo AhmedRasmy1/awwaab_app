@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
               size: AppSize.s24,
             ),
             onPressed: () {
-              // Action for home button
+              Navigator.pushNamed(context, RoutesManager.settingsRoute);
             },
           ),
         ],

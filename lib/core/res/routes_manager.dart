@@ -1,10 +1,12 @@
 import 'package:awwaab_app/bottom_navigation_bar_widget.dart';
+import 'package:awwaab_app/settings_page.dart';
 import 'package:awwaab_app/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 class RoutesManager {
   static const String initialRoute = '/';
   static const String mainLayoutRoute = '/mainLayout';
+  static const String settingsRoute = '/settings';
 }
 
 class RouteGenerator {
@@ -14,6 +16,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const CustomSplashScreen());
       case RoutesManager.mainLayoutRoute:
         return MaterialPageRoute(builder: (_) => const MainLayoutScreen());
+      case RoutesManager.settingsRoute:
+        return MaterialPageRoute(builder: (_) => const SettingsPage());
       default:
         return unDefinedRoute();
     }

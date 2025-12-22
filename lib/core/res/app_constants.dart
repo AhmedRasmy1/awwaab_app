@@ -8,6 +8,13 @@ class AppConstants {
   static const String quranArabic = "القرآن";
   static const String azkarArabic = "أذكار";
   static const String prayerArabic = "الصلاة";
+  static const String settingsArabic = "الإعدادات";
+  static const String fontFamily = 'Cairo';
+  static const String appearanceArabic = "المظهر";
+  static const String darkModeArabic = "الوضع الليلي";
+  static const String disabledArabic = "مُعطّل";
+  static const String enabledArabic = "مُفعّل";
+  static const String readingArabic = "القراءة";
 }
 
 final List<Widget> screens = [
