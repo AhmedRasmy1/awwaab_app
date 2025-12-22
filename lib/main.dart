@@ -1,3 +1,4 @@
+import 'package:awwaab_app/bottom_navigation_bar_widget.dart';
 import 'package:awwaab_app/core/res/app_constants.dart';
 import 'package:awwaab_app/core/res/app_theme.dart';
 import 'package:awwaab_app/core/res/color_manager.dart';
@@ -45,7 +46,10 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppConstants.appNameArabic),
+        title: const Text(
+          AppConstants.appNameArabic,
+          style: TextStyle(color: ColorManager.textPrimary),
+        ),
         actions: [
           IconButton(
             icon: const Icon(

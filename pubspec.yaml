@@ -14,6 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  flutter_islamic_icons: ^1.0.2
   flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.4.7
@@ -24,6 +25,7 @@ dependencies:
   pretty_dio_logger: ^1.4.0
   retrofit: ^4.9.1
   shared_preferences: ^2.5.4
+  solar_icons: ^0.0.5
   url_launcher: ^6.3.2
 
 dependency_overrides:
@@ -46,17 +48,17 @@ flutter_launcher_icons:
   min_sdk_android: 21
 
 flutter_native_splash:
-  color: "#1F3C2E"           
-  image: assets/icons/logo.png  
-  branding: assets/icons/logo.png 
-  
-  android_12: 
+  color: "#1F3C2E"
+  image: assets/icons/logo.png
+  branding: assets/icons/logo.png
+
+  android_12:
     image: assets/icons/logo.png
     icon_background_color: "#1F3C2E"
-  
+
   android: true
   ios: true
-  fullscreen: true  
+  fullscreen: true
 
 flutter:
   uses-material-design: true
@@ -82,4 +84,4 @@ flutter:
         - asset: assets/fonts/ArefRuqaa-Regular.ttf
           weight: 400
         - asset: assets/fonts/ArefRuqaa-Bold.ttf
-          weight: 700      
+          weight: 700

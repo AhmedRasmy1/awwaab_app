@@ -9,4 +9,7 @@ class ColorManager {
   static const Color textSecondary = Color(0xFF6E6E6E);
   static const Color divider = Color(0xFFE5E5E5);
   static const Color settingsIcon = Color(0xff585858);
+  static const Color activeIconColor = Color(0xFF1F3C2E);
+  static const Color activeBackgroundColor = Color(0xFFE8ECE9);
+  static final Color inactiveIconColor = Colors.grey.shade600;
 }

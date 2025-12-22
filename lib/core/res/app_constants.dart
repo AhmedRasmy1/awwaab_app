@@ -1,4 +1,18 @@
+import 'package:awwaab_app/main.dart';
+import 'package:flutter/material.dart';
+
 class AppConstants {
   static const String appName = "Awwaab";
   static const String appNameArabic = "أَوَّابٌ";
+  static const String homeArabic = "الرئيسية";
+  static const String quranArabic = "القرآن";
+  static const String azkarArabic = "أذكار";
+  static const String prayerArabic = "الصلاة";
 }
+
+final List<Widget> screens = [
+  HomePage(),
+  const Center(child: Text('شاشة القرآن', style: TextStyle(fontSize: 30))),
+  const Center(child: Text('شاشة الأذكار', style: TextStyle(fontSize: 30))),
+  const Center(child: Text('شاشة الصلاة', style: TextStyle(fontSize: 30))),
+];
