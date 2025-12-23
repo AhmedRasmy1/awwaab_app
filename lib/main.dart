@@ -54,37 +54,3 @@ class Awwaab extends StatelessWidget {
     );
   }
 }
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // الألوان بتتاخد أوتوماتيك من الثيم دلوقتي
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          AppConstants.appNameArabic,
-          // شيلنا الستايل المثبت عشان ياخد من الثيم (أبيض في الداكن/أسود في الفاتح)
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.settings_outlined,
-              size: 24, // الحجم بس، اللون بيتاخد من IconTheme
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, RoutesManager.settingsRoute);
-            },
-          ),
-        ],
-      ),
-      body: Center(
-        child: Text(
-          'مرحبًا بك في تطبيق أَوَّابٌ!',
-          style: Theme.of(context).textTheme.bodyLarge, // عشان يتلون صح
-        ),
-      ),
-    );
-  }
-}

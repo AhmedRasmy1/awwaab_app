@@ -21,30 +21,20 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
     final isSmallScreen = screenSize.width < 360;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // 1. ألوان النافيجيشن بار (الخلفية والضل)
     final navBarColor = isDark ? const Color(0xFF242826) : Colors.white;
     final shadowColor = isDark
         ? Colors.black.withOpacity(0.3)
         : Colors.black.withOpacity(0.05);
 
-    // ============================================================
-    // 2. التعديل اللي هيريحك (الألوان زي ما طلبت بالظبط) 😡👇
-    // ============================================================
-
-    // الأيقونة: خضراء غامقة ثااااابتة في الوضعين (مش هتتغير للأبيض)
     const selectedIconColor = Color(0xFF1F3C2E);
 
-    // الخلفية: فاتحة في اللايت، ورصاصي غامق في الدارك (زي ما طلبت)
     final selectedBgColor = isDark
-        ? const Color(0xFF3E413E) // رصاصي غامق (عشان يبان في الدارك)
-        : const Color(0xFFE8ECE9); // فاتح (عشان يبان في اللايت)
+        ? const Color(0xFF3E413E)
+        : const Color(0xFFE8ECE9);
 
-    // الأيقونة غير النشطة
     final unselectedIconColor = isDark
         ? Colors.grey.shade500
         : ColorManager.inactiveIconColor;
-    // ============================================================
-
     return Scaffold(
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
@@ -178,7 +168,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
         width: selectedWidth,
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: bgColor, // الخلفية اللي ظبطناها (فاتح/رصاصي غامق)
+          color: bgColor,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -190,7 +180,7 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
             Text(
               label,
               style: TextStyle(
-                color: activeColor, // الأخضر الغامق الثابت
+                color: activeColor,
                 fontWeight: FontWeight.bold,
                 fontSize: isSmallScreen ? 10 : 12,
               ),
