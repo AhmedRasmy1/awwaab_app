@@ -26,7 +26,9 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
         ? Colors.black.withOpacity(0.3)
         : Colors.black.withOpacity(0.05);
 
-    const selectedIconColor = Color(0xFF1F3C2E);
+    final selectedIconColor = isDark
+        ? const Color(0xFFB8E4D6)
+        : const Color(0xFF1F3C2E);
 
     final selectedBgColor = isDark
         ? const Color(0xFF3E413E)

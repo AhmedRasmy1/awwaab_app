@@ -1,6 +1,8 @@
 import 'package:awwaab_app/core/res/app_constants.dart';
 import 'package:awwaab_app/core/res/routes_manager.dart';
+import 'package:awwaab_app/features/home/presentation/widgets/allah_name_card.dart';
 import 'package:awwaab_app/features/home/presentation/widgets/ayah_of_day_card.dart';
+import 'package:awwaab_app/features/home/presentation/widgets/feeling_card.dart';
 import 'package:awwaab_app/features/home/presentation/widgets/next_prayer_card.dart';
 import 'package:awwaab_app/features/home/presentation/widgets/zekr_of_time_card.dart';
 import 'package:flutter/material.dart';
@@ -54,8 +56,10 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const AyahOfTheDayCard(),
+            const FeelingsSection(),
             const NextPrayerCard(),
             const ZekrOfTimeCard(),
+            const AllahNameCard(),
           ],
         ),
       ),

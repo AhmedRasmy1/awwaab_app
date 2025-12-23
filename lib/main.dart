@@ -1,12 +1,9 @@
-import 'package:awwaab_app/bottom_navigation_bar_widget.dart';
-import 'package:awwaab_app/core/res/app_constants.dart';
 import 'package:awwaab_app/core/res/app_theme.dart';
-import 'package:awwaab_app/core/res/color_manager.dart';
 import 'package:awwaab_app/core/res/routes_manager.dart';
-import 'package:awwaab_app/core/res/values_manager.dart';
 import 'package:awwaab_app/core/utils/cashed_data_shared_preferences.dart';
 import 'package:awwaab_app/features/settings/viewmodels/theme/theme_cubit_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -15,6 +12,12 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await CacheService.cacheInitialization();
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+    ),
+  );
   runApp(const Awwaab());
 }
 
