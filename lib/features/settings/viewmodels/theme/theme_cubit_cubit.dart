@@ -1,7 +1,6 @@
 import 'package:awwaab_app/core/utils/cashed_data_shared_preferences.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 part 'theme_cubit_state.dart';
 

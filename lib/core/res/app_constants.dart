@@ -1,5 +1,4 @@
 import 'package:awwaab_app/features/home/presentation/views/home_page.dart';
-import 'package:awwaab_app/main.dart';
 import 'package:flutter/material.dart';
 
 class AppConstants {

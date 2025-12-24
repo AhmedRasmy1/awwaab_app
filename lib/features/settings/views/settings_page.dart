@@ -72,7 +72,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                     trailing: Switch(
                       value: isDark,
-                      activeColor: ColorManager.primary,
+                      activeThumbColor: ColorManager.primary,
                       onChanged: (bool value) {
                         context.read<ThemeCubit>().changeTheme(isDark: value);
                       },
@@ -119,7 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 subtitle: AppConstants.disabledArabic,
                 trailing: Switch(
                   value: true,
-                  activeColor: ColorManager.primary,
+                  activeThumbColor: ColorManager.primary,
                   onChanged: (bool value) {
                     // Handle notifications toggle
                   },
