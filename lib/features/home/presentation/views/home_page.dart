@@ -5,6 +5,7 @@ import 'package:awwaab_app/features/home/presentation/widgets/ayah_of_day_card.d
 import 'package:awwaab_app/features/home/presentation/widgets/feeling_card.dart';
 import 'package:awwaab_app/features/home/presentation/widgets/next_prayer_card.dart';
 import 'package:awwaab_app/features/home/presentation/widgets/zekr_of_time_card.dart';
+import 'package:awwaab_app/features/home/presentation/widgets/hijri_date_section.dart'; // Import الجديد
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -12,8 +13,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String hijriDate = "١٤ رجب ١٤٤٦ هـ";
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -34,26 +33,9 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  hijriDate,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-              ),
-            ),
+            // استدعينا الودجت الجديد هنا بكل بساطة
+            const HijriDateSection(),
+
             const SizedBox(height: 20),
             const AyahOfTheDayCard(),
             const FeelingsSection(),
