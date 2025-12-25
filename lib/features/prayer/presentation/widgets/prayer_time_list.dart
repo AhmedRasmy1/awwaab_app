@@ -1,7 +1,6 @@
 import 'package:adhan/adhan.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-// ⚠️ المسار ده بناءً على الكود اللي انت بعتهولي
 import 'package:awwaab_app/core/utils/cashed_data_shared_preferences.dart';
 
 class PrayerTimesList extends StatefulWidget {

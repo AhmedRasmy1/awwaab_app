@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'package:adhan/adhan.dart';
+import 'package:awwaab_app/core/utils/cashed_data_shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NextPrayerCard extends StatefulWidget {
   const NextPrayerCard({super.key});
@@ -10,27 +13,131 @@ class NextPrayerCard extends StatefulWidget {
 
 class _NextPrayerCardState extends State<NextPrayerCard> {
   Timer? _timer;
-  Duration remainingTime = const Duration(hours: 1, minutes: 20, seconds: 30);
+  Duration _remainingTime = Duration.zero;
+
+  // متغيرات لعرض البيانات
+  String _nextPrayerName = "--";
+  String _nextPrayerTimeDisplay = "--:--";
+  bool _isLoading = true;
+  bool _hasError = false;
 
   @override
   void initState() {
     super.initState();
-    startTimer();
+    _calculateNextPrayer(); // 1. ابدأ الحساب أول ما الكارت يظهر
   }
 
-  void startTimer() {
+  // دالة الحساب الرئيسية
+  Future<void> _calculateNextPrayer() async {
+    try {
+      // أ) هات الإحداثيات من الكاش (عشان السرعة)
+      final lat = CacheService.getData(key: 'cached_lat');
+      final lng = CacheService.getData(key: 'cached_lng');
+
+      if (lat == null || lng == null) {
+        // لو مفيش مكان محفوظ لسه (أول فتحة للتطبيق)
+        if (mounted) {
+          setState(() {
+            _nextPrayerName = "حدد الموقع";
+            _nextPrayerTimeDisplay = "00:00";
+            _isLoading = false;
+            _hasError = true;
+          });
+        }
+        return;
+      }
+
+      // ب) إعدادات الحساب (مصرية + شافعي)
+      final coordinates = Coordinates(lat, lng);
+      final params = CalculationMethod.egyptian.getParameters();
+      params.madhab = Madhab.shafi;
+
+      // ج) حساب مواقيت اليوم وبكرة (عشان لو عدينا العشاء)
+      final now = DateTime.now();
+      final todayComponents = DateComponents.from(now);
+      final tomorrowComponents = DateComponents.from(
+        now.add(const Duration(days: 1)),
+      );
+
+      final todayPrayers = PrayerTimes(coordinates, todayComponents, params);
+      final tomorrowPrayers = PrayerTimes(
+        coordinates,
+        tomorrowComponents,
+        params,
+      );
+
+      // د) تحديد الصلاة القادمة
+      Prayer next = todayPrayers.nextPrayer();
+      DateTime? nextTime;
+
+      if (next == Prayer.none) {
+        // لو خلصنا صلوات النهاردة، يبقى اللي عليها الدور الفجر بتاع بكرة
+        next = Prayer.fajr;
+        nextTime = tomorrowPrayers.fajr;
+      } else {
+        nextTime = todayPrayers.timeForPrayer(next);
+      }
+
+      // هـ) تحديث البيانات
+      if (nextTime != null) {
+        final diff = nextTime.difference(now);
+
+        if (mounted) {
+          setState(() {
+            _nextPrayerName = _getPrayerArabicName(next);
+            _nextPrayerTimeDisplay = DateFormat.jm('ar').format(nextTime!);
+            _remainingTime = diff;
+            _isLoading = false;
+            _hasError = false;
+          });
+
+          // و) شغل العداد
+          _startTimer();
+        }
+      }
+    } catch (e) {
+      debugPrint("Error calculating prayer: $e");
+      if (mounted) setState(() => _hasError = true);
+    }
+  }
+
+  void _startTimer() {
+    _timer?.cancel(); // الغي أي تايمر قديم
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (remainingTime.inSeconds > 0) {
+      if (_remainingTime.inSeconds > 0) {
         setState(() {
-          remainingTime = remainingTime - const Duration(seconds: 1);
+          _remainingTime = _remainingTime - const Duration(seconds: 1);
         });
       } else {
+        // لو الوقت خلص (الصلاة أذنت) -> عيد الحساب عشان تجيب الصلاة اللي بعدها
         timer.cancel();
+        _calculateNextPrayer();
       }
     });
   }
 
+  // ترجمة اسم الصلاة
+  String _getPrayerArabicName(Prayer p) {
+    switch (p) {
+      case Prayer.fajr:
+        return "الفجر";
+      case Prayer.sunrise:
+        return "الشروق";
+      case Prayer.dhuhr:
+        return "الظهر";
+      case Prayer.asr:
+        return "العصر";
+      case Prayer.maghrib:
+        return "المغرب";
+      case Prayer.isha:
+        return "العشاء";
+      default:
+        return "";
+    }
+  }
+
   String _formatDuration(Duration duration) {
+    if (duration.isNegative) return "00:00:00";
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
@@ -51,12 +158,10 @@ class _NextPrayerCardState extends State<NextPrayerCard> {
         ? Theme.of(context).cardTheme.color!
         : Colors.white;
     final borderColor = isDark ? Colors.white12 : Colors.grey.shade300;
-
     final primaryTextColor = isDark ? Colors.white : const Color(0xFF1F3C2E);
     final secondaryTextColor = isDark
         ? Colors.grey.shade400
         : Colors.grey.shade600;
-
     final iconBgColor = isDark ? Colors.white10 : const Color(0xFFE8ECE9);
 
     return Container(
@@ -75,75 +180,96 @@ class _NextPrayerCardState extends State<NextPrayerCard> {
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "الصلاة القادمة",
+      child: _isLoading
+          ? Center(child: CircularProgressIndicator(color: primaryTextColor))
+          : _hasError
+          ? Center(
+              child: Text(
+                "يرجى تحديد الموقع من صفحة الصلاة",
                 style: TextStyle(
-                  fontSize: 14,
-                  color: secondaryTextColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "الظهر",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w600,
-                  color: primaryTextColor,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                "١:٣٠ م",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: primaryTextColor,
-                ),
-              ),
-            ],
-          ),
-
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: iconBgColor,
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.access_time_rounded,
-                    color: primaryTextColor,
-                    size: 30,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              Text(
-                _formatDuration(remainingTime),
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Cairo',
                   color: secondaryTextColor,
                 ),
               ),
-            ],
-          ),
-        ],
-      ),
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "الصلاة القادمة",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: secondaryTextColor,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    // اسم الصلاة الحقيقي
+                    Text(
+                      _nextPrayerName,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w600,
+                        color: primaryTextColor,
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+
+                    // وقت الصلاة الحقيقي
+                    Text(
+                      _nextPrayerTimeDisplay,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: primaryTextColor,
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                  ],
+                ),
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: iconBgColor,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.access_time_rounded,
+                          color: primaryTextColor,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    // العداد التنازلي الحقيقي
+                    Text(
+                      "${_formatDuration(_remainingTime)}",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: secondaryTextColor,
+                        // fontFamily: 'Courier', // ممكن تستخدم خط أرقام لو حابب
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
     );
   }
 }

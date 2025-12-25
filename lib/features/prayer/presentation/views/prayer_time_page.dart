@@ -1,4 +1,5 @@
 import 'package:adhan/adhan.dart';
+import 'package:awwaab_app/core/utils/cashed_data_shared_preferences.dart';
 import 'package:awwaab_app/core/utils/prayer_service.dart';
 import 'package:awwaab_app/features/prayer/presentation/widgets/current_prayer_card.dart';
 import 'package:awwaab_app/features/prayer/presentation/widgets/prayer_hedear_section.dart'; // تأكد من اسم الملف صح
@@ -36,6 +37,8 @@ class _PrayerTimesPageState extends State<PrayerTimesPage> {
     try {
       // أ) هات المكان (GPS)
       final position = await _prayerService.determinePosition();
+      await CacheService.setData(key: 'cached_lat', value: position.latitude);
+      await CacheService.setData(key: 'cached_lng', value: position.longitude);
 
       // ب) هات اسم المدينة
       final city = await _prayerService.getCityName(position);
