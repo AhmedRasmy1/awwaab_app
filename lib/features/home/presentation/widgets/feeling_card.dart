@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// تأكد من وجود هذا السطر لو هتستخدم أيقونة اليدين بتاعت الدعاء
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 
 class FeelingsSection extends StatefulWidget {
@@ -19,11 +18,9 @@ class _FeelingsSectionState extends State<FeelingsSection> {
     _duaIndices = List.generate(feelingsData.length, (index) => 0);
   }
 
-  // الداتا (تم تغيير 'icon' ليقبل IconData بدلاً من String)
   final List<Map<String, dynamic>> feelingsData = [
     {
       'label': 'حزين',
-      // استخدمنا أيقونات دائرية ناعمة (Rounded)
       'icon': Icons.sentiment_dissatisfied_rounded,
       'duas': [
         "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَالْعَجْزِ وَالْكَسَلِ، وَالْبُخْلِ وَالْجُبْنِ، وَضَلَعِ الدَّيْنِ، وَغَلَبَةِ الرِّجَالِ.",
@@ -46,8 +43,7 @@ class _FeelingsSectionState extends State<FeelingsSection> {
     },
     {
       'label': 'قلق',
-      'icon': Icons
-          .help_outline_rounded, // علامة استفهام دائرية تعبر عن الحيرة والقلق
+      'icon': Icons.help_outline_rounded,
       'duas': [
         "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ.",
         "اللَّهُمَّ لَا سَهْلَ إِلَّا مَا جَعَلْتَهُ سَهْلًا، وَأَنْتَ تَجْعَلُ الْحَزْنَ إِذَا شِئْتَ سَهْلًا.",
@@ -95,6 +91,9 @@ class _FeelingsSectionState extends State<FeelingsSection> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final screenSize = MediaQuery.of(context).size;
+    final isSmallScreen = screenSize.width < 360;
+    final isMediumScreen = screenSize.width < 600;
 
     final selectedColor = const Color(0xFF1F3C2E);
     final unselectedBgColor = isDark ? Colors.white10 : Colors.white;
@@ -102,12 +101,22 @@ class _FeelingsSectionState extends State<FeelingsSection> {
         ? const Color(0xFF242826)
         : const Color(0xFFF9F5EB);
 
+    // Responsive sizing
+    final cardWidth = isSmallScreen ? 65.0 : 75.0;
+    final cardHeight = isSmallScreen ? 80.0 : 90.0;
+    final iconSize = isSmallScreen ? 28.0 : 32.0;
+    final labelFontSize = isSmallScreen ? 12.0 : 14.0;
+    final titleFontSize = isSmallScreen ? 13.0 : 15.0;
+    final duaFontSize = isSmallScreen ? 16.0 : 18.0;
+    final horizontalPadding = isSmallScreen ? 8.0 : 10.0;
+    final cardMargin = isSmallScreen ? 8.0 : 12.0;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 1. العنوان + الأيقونة
+        // Title + Icon
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -117,26 +126,26 @@ class _FeelingsSectionState extends State<FeelingsSection> {
                 color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
               ),
               const SizedBox(width: 4),
-              Text(
-                "بمَ تشعر الآن؟",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+              Flexible(
+                child: Text(
+                  "بمَ تشعر الآن؟",
+                  style: TextStyle(
+                    fontSize: titleFontSize,
+                    fontWeight: FontWeight.w500,
+                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                  ),
                 ),
               ),
-              const SizedBox(width: 8),
             ],
           ),
         ),
+        SizedBox(height: isSmallScreen ? 12 : 16),
 
-        const SizedBox(height: 16),
-
-        // 2. قائمة المشاعر
+        // Feelings List
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Row(
             children: List.generate(feelingsData.length, (index) {
               final isSelected = _selectedIndex == index;
@@ -157,16 +166,16 @@ class _FeelingsSectionState extends State<FeelingsSection> {
                 },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.only(left: 12),
-                  width: 75,
-                  height: 90,
+                  margin: EdgeInsets.only(left: cardMargin),
+                  width: cardWidth,
+                  height: cardHeight,
                   decoration: BoxDecoration(
                     color: isSelected ? selectedColor : unselectedBgColor,
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       if (!isSelected && !isDark)
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
+                          color: Colors.grey.withValues(alpha: 0.1),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
@@ -175,24 +184,28 @@ class _FeelingsSectionState extends State<FeelingsSection> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // التعديل هنا: استخدام Icon بدلاً من Text
                       Icon(
                         feeling['icon'] as IconData,
-                        size: 32, // حجم مناسب للأيقونة
-                        // لون الأيقونة يتغير مع التحديد زي النص بالظبط
+                        size: iconSize,
                         color: isSelected
                             ? Colors.white
                             : (isDark ? Colors.white70 : Colors.black87),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        feeling['label'],
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: isSelected
-                              ? Colors.white
-                              : (isDark ? Colors.white70 : Colors.black87),
+                      const SizedBox(height: 6),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Text(
+                          feeling['label'],
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: labelFontSize,
+                            fontWeight: FontWeight.bold,
+                            color: isSelected
+                                ? Colors.white
+                                : (isDark ? Colors.white70 : Colors.black87),
+                          ),
                         ),
                       ),
                     ],
@@ -203,7 +216,7 @@ class _FeelingsSectionState extends State<FeelingsSection> {
           ),
         ),
 
-        // 3. كارت الدعاء (بدون تعديل في اللوجيك)
+        // Dua Card
         AnimatedSize(
           duration: const Duration(milliseconds: 400),
           curve: Curves.easeInOut,
@@ -211,27 +224,34 @@ class _FeelingsSectionState extends State<FeelingsSection> {
               ? const SizedBox.shrink()
               : Container(
                   width: double.infinity,
-                  margin: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                  padding: const EdgeInsets.all(20),
+                  margin: EdgeInsets.fromLTRB(
+                    horizontalPadding * 2,
+                    isSmallScreen ? 12 : 20,
+                    horizontalPadding * 2,
+                    isSmallScreen ? 6 : 10,
+                  ),
+                  padding: EdgeInsets.all(isSmallScreen ? 14 : 20),
                   decoration: BoxDecoration(
                     color: cardBgColor,
                     borderRadius: BorderRadius.circular(25),
                   ),
                   child: Column(
                     children: [
-                      Text(
-                        feelingsData[_selectedIndex!]['duas'][_duaIndices[_selectedIndex!]],
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18,
-                          height: 1.6,
-                          fontWeight: FontWeight.bold,
-                          color: isDark
-                              ? Colors.white
-                              : const Color(0xFF1F3C2E),
+                      SingleChildScrollView(
+                        child: Text(
+                          feelingsData[_selectedIndex!]['duas'][_duaIndices[_selectedIndex!]],
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: duaFontSize,
+                            height: 1.6,
+                            fontWeight: FontWeight.w500,
+                            color: isDark
+                                ? Colors.white
+                                : const Color(0xFF1F3C2E),
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 15),
+                      SizedBox(height: isSmallScreen ? 10 : 15),
                       TextButton(
                         onPressed: () {
                           setState(() {
@@ -246,7 +266,7 @@ class _FeelingsSectionState extends State<FeelingsSection> {
                         child: Text(
                           "إخفاء",
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: isSmallScreen ? 12 : 14,
                             fontWeight: FontWeight.bold,
                             color: isDark
                                 ? Colors.grey.shade400

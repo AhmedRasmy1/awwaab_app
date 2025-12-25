@@ -8,6 +8,7 @@ environment:
   sdk: ^3.9.0
 
 dependencies:
+  adhan: ^2.0.0+1
   cached_network_image: ^3.4.1
   cupertino_icons: ^1.0.8
   dio: ^5.9.0
@@ -20,9 +21,12 @@ dependencies:
   flutter_native_splash: ^2.4.7
   flutter_svg: ^2.2.3
   font_awesome_flutter: ^10.12.0
+  geocoding: ^4.0.0
+  geolocator: ^14.0.2
   get_it: ^9.2.0
   hijri: ^3.0.0
   injectable: ^2.7.1+2
+  intl: ^0.20.2
   pretty_dio_logger: ^1.4.0
   retrofit: ^4.9.1
   shared_preferences: ^2.5.4

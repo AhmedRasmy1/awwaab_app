@@ -5,7 +5,7 @@ import 'package:awwaab_app/features/home/presentation/widgets/ayah_of_day_card.d
 import 'package:awwaab_app/features/home/presentation/widgets/feeling_card.dart';
 import 'package:awwaab_app/features/home/presentation/widgets/next_prayer_card.dart';
 import 'package:awwaab_app/features/home/presentation/widgets/zekr_of_time_card.dart';
-import 'package:awwaab_app/features/home/presentation/widgets/hijri_date_section.dart'; // Import الجديد
+import 'package:awwaab_app/features/home/presentation/widgets/hijri_date_section.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -13,6 +13,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -29,18 +33,24 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: EdgeInsets.only(
+          left: isSmallScreen ? 12 : 20,
+          right: isSmallScreen ? 12 : 20,
+          bottom: screenHeight * 0.15,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // استدعينا الودجت الجديد هنا بكل بساطة
             const HijriDateSection(),
-
-            const SizedBox(height: 20),
+            SizedBox(height: screenHeight * 0.01),
             const AyahOfTheDayCard(),
+            SizedBox(height: screenHeight * 0.01),
             const FeelingsSection(),
+            SizedBox(height: screenHeight * 0.01),
             const NextPrayerCard(),
+            SizedBox(height: screenHeight * 0.01),
             const ZekrOfTimeCard(),
+            SizedBox(height: screenHeight * 0.01),
             const AllahNameCard(),
           ],
         ),

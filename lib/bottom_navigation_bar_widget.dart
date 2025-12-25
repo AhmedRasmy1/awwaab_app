@@ -37,7 +37,10 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
     final unselectedIconColor = isDark
         ? Colors.grey.shade500
         : ColorManager.inactiveIconColor;
+
     return Scaffold(
+      // التعديل الوحيد هنا: دي بتخلي الجسم يمتد ورا البار فيبان إنه عايم
+      extendBody: true,
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
         transitionBuilder: (Widget child, Animation<double> animation) {
@@ -48,9 +51,9 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
       bottomNavigationBar: Container(
         margin: EdgeInsets.fromLTRB(
           isSmallScreen ? AppMargin.m10 : AppMargin.m20,
-          AppMargin.m0,
+          0, // Top margin
           isSmallScreen ? AppMargin.m10 : AppMargin.m20,
-          isSmallScreen ? AppMargin.m12 : AppMargin.m20,
+          isSmallScreen ? AppMargin.m12 : AppMargin.m20, // Bottom margin
         ),
         decoration: BoxDecoration(
           color: Colors.transparent,
@@ -65,14 +68,13 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(AppSize.s30),
           child: NavigationBarTheme(
             data: NavigationBarThemeData(
               indicatorColor: Colors.transparent,
               labelTextStyle: WidgetStateProperty.all(
                 const TextStyle(fontSize: 0),
               ),
-              // إلغاء الوميض الأبيض اللي كان بيعصبك
               overlayColor: WidgetStateProperty.resolveWith(
                 (states) => Colors.transparent,
               ),

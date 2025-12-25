@@ -1,4 +1,5 @@
 import 'package:awwaab_app/features/home/presentation/views/home_page.dart';
+import 'package:awwaab_app/features/prayer/presentation/views/prayer_time_page.dart';
 import 'package:flutter/material.dart';
 
 class AppConstants {
@@ -24,5 +25,5 @@ final List<Widget> screens = [
   HomePage(),
   const Center(child: Text('شاشة القرآن', style: TextStyle(fontSize: 30))),
   const Center(child: Text('شاشة الأذكار', style: TextStyle(fontSize: 30))),
-  const Center(child: Text('شاشة الصلاة', style: TextStyle(fontSize: 30))),
+  PrayerTimesPage(),
 ];
