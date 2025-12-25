@@ -220,10 +220,7 @@ class _PrayerTimesPageState extends State<PrayerTimesPage> {
         style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
       ),
       centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () => Navigator.pop(context),
-      ),
+
       actions: [
         IconButton(
           icon: const Icon(Icons.location_on_outlined, size: 24),
