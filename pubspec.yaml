@@ -72,6 +72,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/fonts/
+    - assets/data/
 
   fonts:
     - family: Cairo
@@ -90,3 +91,8 @@ flutter:
           weight: 400
         - asset: assets/fonts/ArefRuqaa-Bold.ttf
           weight: 700
+    - family: UthmanicHafs
+      fonts:
+        - asset: assets/fonts/UthmanTN_v2-0.ttf
+        - asset: assets/fonts/UthmanTNB_v2-0.ttf
+          weight: 700      

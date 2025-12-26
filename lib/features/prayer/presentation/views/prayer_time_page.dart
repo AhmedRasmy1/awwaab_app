@@ -175,7 +175,6 @@ class _PrayerTimesPageState extends State<PrayerTimesPage> {
         padding: EdgeInsets.only(
           left: isSmallScreen ? 12 : 20,
           right: isSmallScreen ? 12 : 20,
-          bottom: screenHeight * 0.15,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

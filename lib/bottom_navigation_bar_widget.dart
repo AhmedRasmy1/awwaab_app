@@ -1,6 +1,5 @@
 import 'package:awwaab_app/core/res/app_constants.dart';
 import 'package:awwaab_app/core/res/color_manager.dart';
-import 'package:awwaab_app/core/res/values_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_islamic_icons/flutter_islamic_icons.dart';
 import 'package:solar_icons/solar_icons.dart';
@@ -21,10 +20,11 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
     final isSmallScreen = screenSize.width < 360;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
+    // ألوان البار
     final navBarColor = isDark ? const Color(0xFF242826) : Colors.white;
     final shadowColor = isDark
         ? Colors.black.withOpacity(0.3)
-        : Colors.black.withOpacity(0.05);
+        : Colors.black.withOpacity(0.1);
 
     final selectedIconColor = isDark
         ? const Color(0xFFB8E4D6)
@@ -39,8 +39,9 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
         : ColorManager.inactiveIconColor;
 
     return Scaffold(
-      // التعديل الوحيد هنا: دي بتخلي الجسم يمتد ورا البار فيبان إنه عايم
-      extendBody: true,
+      // 👇 1. خليناها false عشان المحتوى يخلص عند حرف البار من فوق
+      extendBody: false,
+
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
         transitionBuilder: (Widget child, Animation<double> animation) {
@@ -48,27 +49,31 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
         },
         child: screens[_selectedIndex],
       ),
+
       bottomNavigationBar: Container(
-        margin: EdgeInsets.fromLTRB(
-          isSmallScreen ? AppMargin.m10 : AppMargin.m20,
-          0, // Top margin
-          isSmallScreen ? AppMargin.m10 : AppMargin.m20,
-          isSmallScreen ? AppMargin.m12 : AppMargin.m20, // Bottom margin
-        ),
+        // 👇 2. شيلنا الـ margin عشان يلزق في الحواف
         decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(AppSize.s30),
+          color: navBarColor, // لون الخلفية عشان يغطي اللي وراه
+          // 👇 3. الكيرف من فوق بس (يمين وشمال)
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
           boxShadow: [
             BoxShadow(
               color: shadowColor,
               blurRadius: 20,
-              spreadRadius: 2,
-              offset: const Offset(0, 5),
+              spreadRadius: 0,
+              offset: const Offset(0, -5), // الضل طالع لفوق
             ),
           ],
         ),
+        // لازم ClipRRect عشان يقص الزوايا بتاعة NavigationBar
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(AppSize.s30),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
           child: NavigationBarTheme(
             data: NavigationBarThemeData(
               indicatorColor: Colors.transparent,
@@ -80,9 +85,10 @@ class _MainLayoutScreenState extends State<MainLayoutScreen> {
               ),
             ),
             child: NavigationBar(
-              height: isSmallScreen ? 70 : AppSize.s85,
-              backgroundColor: navBarColor,
-              elevation: AppSize.s0,
+              height: isSmallScreen ? 70 : 80, // ارتفاع مناسب
+              backgroundColor:
+                  Colors.transparent, // شفاف عشان ياخد لون الكونتينر
+              elevation: 0,
               selectedIndex: _selectedIndex,
               labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
               animationDuration: const Duration(milliseconds: 400),

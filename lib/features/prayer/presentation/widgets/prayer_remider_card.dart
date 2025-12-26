@@ -12,6 +12,7 @@ class PrayerReminderCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       decoration: BoxDecoration(
         // لون الخلفية: في الغامق بياخد لون الكارت الطبيعي، في الفاتح ممكن نديله لمسة خفيفة

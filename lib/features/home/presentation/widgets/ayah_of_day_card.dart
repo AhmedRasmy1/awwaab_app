@@ -45,6 +45,7 @@ class AyahOfTheDayCard extends StatelessWidget {
               fontSize: 18,
               height: 1.6,
               fontWeight: FontWeight.bold,
+              fontFamily: 'UthmanicHafs',
             ),
             textDirection: TextDirection.rtl,
           ),
