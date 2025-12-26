@@ -30,12 +30,11 @@ class _NextPrayerCardState extends State<NextPrayerCard> {
   // دالة الحساب الرئيسية
   Future<void> _calculateNextPrayer() async {
     try {
-      // أ) هات الإحداثيات من الكاش (عشان السرعة)
+      // أ) هات الإحداثيات من الكاش
       final lat = CacheService.getData(key: 'cached_lat');
       final lng = CacheService.getData(key: 'cached_lng');
 
       if (lat == null || lng == null) {
-        // لو مفيش مكان محفوظ لسه (أول فتحة للتطبيق)
         if (mounted) {
           setState(() {
             _nextPrayerName = "حدد الموقع";
@@ -47,12 +46,12 @@ class _NextPrayerCardState extends State<NextPrayerCard> {
         return;
       }
 
-      // ب) إعدادات الحساب (مصرية + شافعي)
+      // ب) إعدادات الحساب
       final coordinates = Coordinates(lat, lng);
       final params = CalculationMethod.egyptian.getParameters();
       params.madhab = Madhab.shafi;
 
-      // ج) حساب مواقيت اليوم وبكرة (عشان لو عدينا العشاء)
+      // ج) حساب مواقيت اليوم وبكرة
       final now = DateTime.now();
       final todayComponents = DateComponents.from(now);
       final tomorrowComponents = DateComponents.from(
@@ -71,7 +70,6 @@ class _NextPrayerCardState extends State<NextPrayerCard> {
       DateTime? nextTime;
 
       if (next == Prayer.none) {
-        // لو خلصنا صلوات النهاردة، يبقى اللي عليها الدور الفجر بتاع بكرة
         next = Prayer.fajr;
         nextTime = tomorrowPrayers.fajr;
       } else {
@@ -91,7 +89,6 @@ class _NextPrayerCardState extends State<NextPrayerCard> {
             _hasError = false;
           });
 
-          // و) شغل العداد
           _startTimer();
         }
       }
@@ -102,21 +99,19 @@ class _NextPrayerCardState extends State<NextPrayerCard> {
   }
 
   void _startTimer() {
-    _timer?.cancel(); // الغي أي تايمر قديم
+    _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_remainingTime.inSeconds > 0) {
         setState(() {
           _remainingTime = _remainingTime - const Duration(seconds: 1);
         });
       } else {
-        // لو الوقت خلص (الصلاة أذنت) -> عيد الحساب عشان تجيب الصلاة اللي بعدها
         timer.cancel();
         _calculateNextPrayer();
       }
     });
   }
 
-  // ترجمة اسم الصلاة
   String _getPrayerArabicName(Prayer p) {
     switch (p) {
       case Prayer.fajr:
@@ -256,14 +251,26 @@ class _NextPrayerCardState extends State<NextPrayerCard> {
 
                     const SizedBox(height: 30),
 
-                    // العداد التنازلي الحقيقي
-                    Text(
-                      "${_formatDuration(_remainingTime)}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: secondaryTextColor,
-                        // fontFamily: 'Courier', // ممكن تستخدم خط أرقام لو حابب
+                    // العداد التنازلي الحقيقي (جوه كونتينر شيك)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        // نفس لون خلفية الأيقونة عشان التناسق
+                        color: iconBgColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        "${_formatDuration(_remainingTime)}",
+                        style: TextStyle(
+                          fontSize: 14, // صغرنا الخط سنة عشان الكونتينر
+                          fontWeight: FontWeight.bold,
+                          // اللون الأساسي عشان يبرز جوه الكونتينر
+                          color: primaryTextColor,
+                          fontFamily: 'Cairo',
+                        ),
                       ),
                     ),
                   ],
