@@ -24,9 +24,10 @@ class AzkarDetailsPage extends StatelessWidget {
         ),
         centerTitle: true,
         elevation: 0,
+        backgroundColor: isDark ? Colors.transparent : Colors.white,
         foregroundColor: isDark ? Colors.white : primaryColor,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -44,7 +45,7 @@ class AzkarDetailsPage extends StatelessWidget {
 }
 
 // ---------------------------------------------------------
-// كارت الذكر الذكي (بيتغير لونه لما يخلص)
+// كارت الذكر الذكي (محدث ليعرض الفضل والشرح)
 // ---------------------------------------------------------
 class AzkarCardItem extends StatefulWidget {
   final AzkarItemModel azkarItem;
@@ -87,27 +88,19 @@ class _AzkarCardItemState extends State<AzkarCardItem>
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = const Color(0xFF1B4332);
-
-    // هل خلصنا عد؟
     final isDone = _currentCount == _targetCount;
-
-    // 🎨 ألوان الكارت العادية
     final defaultBgColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
-
-    // 🎨 ألوان الكارت لما يخلص (Highight Color)
     final doneBgColor = isDark
-        ? primaryColor.withOpacity(0.2) // أخضر غامق شفاف في النايت مود
-        : const Color(0xFFE8F5E9); // أخضر فاتح جداً في اللايت مود
+        ? primaryColor.withOpacity(0.2)
+        : const Color(0xFFE8F5E9);
 
-    // حساب نسبة التقدم
     double progress = _targetCount > 0 ? _currentCount / _targetCount : 0;
 
-    // استخدمنا AnimatedContainer عشان تغيير اللون يكون ناعم
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300), // سرعة التحول
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
-        color: isDone ? doneBgColor : defaultBgColor, // 👈 هنا تغيير اللون
+        color: isDone ? doneBgColor : defaultBgColor,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -117,7 +110,6 @@ class _AzkarCardItemState extends State<AzkarCardItem>
           ),
         ],
         border: Border.all(
-          // 👈 لو خلص، البرواز يبقى أخضر، لو لسه يبقى رمادي خفيف
           color: isDone
               ? primaryColor.withOpacity(0.5)
               : (isDark ? Colors.white10 : const Color(0xFFF0F0F0)),
@@ -132,52 +124,74 @@ class _AzkarCardItemState extends State<AzkarCardItem>
             widget.azkarItem.text,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'AmiriQuran',
-              fontSize: 18,
-              height: 1.6,
+              fontFamily:
+                  'AmiriQuran', // تأكد إن الفونت ده متعرف في pubspec.yaml
+              fontSize: 20, // كبرنا الخط سنة عشان القراءة تكون أسهل
+              height: 1.8, // وسعنا السطور عشان التشكيل
               fontWeight: FontWeight.w600,
               color: isDark ? Colors.white : const Color(0xFF2D2D2D),
             ),
           ),
 
+          // 2. الفضل (Description) - لو موجود نعرضه
+          if (widget.azkarItem.description.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? Colors.white.withOpacity(0.05)
+                    : Colors.orange.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                widget.azkarItem.description,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 13,
+                  color: isDark
+                      ? Colors.white70
+                      : const Color(0xFFC88A00), // لون دهبي غامق شوية
+                ),
+              ),
+            ),
+          ],
+
           const SizedBox(height: 20),
 
-          // 2. الدائرة والعداد
+          // 3. الدائرة والعداد
           GestureDetector(
             onTap: _incrementCounter,
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // الدائرة الخلفية
                 SizedBox(
                   width: 80,
                   height: 80,
                   child: CircularProgressIndicator(
                     value: 1.0,
-                    strokeWidth: 4,
-                    // لو خلصنا بنخلي الدايرة الخلفية شفافة شوية عشان متبقاش شاذة
+                    strokeWidth: 5, // تخنا الدايرة سنة
                     color: isDark ? Colors.white10 : Colors.grey.shade200,
                   ),
                 ),
-                // دائرة التقدم
                 SizedBox(
                   width: 80,
                   height: 80,
                   child: CircularProgressIndicator(
                     value: progress,
-                    strokeWidth: 4,
+                    strokeWidth: 5,
                     color: primaryColor,
-                    backgroundColor: Colors.transparent,
+                    strokeCap: StrokeCap.round, // خلينا الحواف مدورة (أشيك)
                   ),
                 ),
-                // الرقم جوه الدائرة
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       "$_currentCount",
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 26,
                         fontWeight: FontWeight.bold,
                         color: primaryColor,
                         height: 1,
@@ -199,7 +213,7 @@ class _AzkarCardItemState extends State<AzkarCardItem>
 
           const SizedBox(height: 20),
 
-          // 3. الحالة النهائية
+          // 4. الحالة النهائية والمصدر
           if (isDone) ...[
             TextButton.icon(
               onPressed: _resetCounter,
@@ -211,9 +225,7 @@ class _AzkarCardItemState extends State<AzkarCardItem>
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.grey, // لون الزرار رمادي عشان ميزغللش
-              ),
+              style: TextButton.styleFrom(foregroundColor: Colors.grey),
             ),
             const SizedBox(height: 5),
             Row(
@@ -222,33 +234,35 @@ class _AzkarCardItemState extends State<AzkarCardItem>
                 Text(
                   "✓",
                   style: TextStyle(
-                    fontSize: 14,
-                    color: isDark ? Colors.white70 : Colors.grey[700],
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white70 : primaryColor,
                   ),
                 ),
-                const SizedBox(width: 7),
+                const SizedBox(width: 8),
                 Text(
                   "تم بحمد الله",
                   style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: isDark ? Colors.white70 : Colors.grey[700],
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white70 : primaryColor,
                   ),
                 ),
               ],
             ),
           ] else ...[
-            Text(
-              widget.azkarItem.reference.isEmpty
-                  ? "حديث شريف"
-                  : widget.azkarItem.reference,
-              style: TextStyle(
-                fontFamily: 'Cairo',
-                fontSize: 12,
-                color: isDark ? Colors.white38 : Colors.grey,
+            // عرض المصدر
+            if (widget.azkarItem.reference.isNotEmpty)
+              Text(
+                widget.azkarItem.reference,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 12,
+                  color: isDark ? Colors.white38 : Colors.grey,
+                ),
               ),
-            ),
           ],
         ],
       ),

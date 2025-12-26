@@ -24,8 +24,7 @@ class _AzkarPageState extends State<AzkarPage> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isSmallScreen = screenWidth < 360;
+    final isSmallScreen = MediaQuery.of(context).size.width < 360;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = const Color(0xFF1B4332);
     final accentColor = const Color(0xFFC8B88A);
@@ -34,7 +33,7 @@ class _AzkarPageState extends State<AzkarPage> {
       backgroundColor: isDark
           ? const Color(0xFF121212)
           : const Color(0xFFF9F9F9),
-      appBar: _buildAppBar(context),
+      appBar: _buildAppBar(context, isDark, primaryColor),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(
           parent: AlwaysScrollableScrollPhysics(),
@@ -42,18 +41,21 @@ class _AzkarPageState extends State<AzkarPage> {
         padding: EdgeInsets.only(
           left: isSmallScreen ? 12 : 20,
           right: isSmallScreen ? 12 : 20,
-          bottom: screenHeight * 0.01,
+          bottom: 20, // 👈 مسافة صغيرة ومناسبة تحت
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. العنوان
+            // 1. عنوان الأذكار
             SectionTitle(
-              title: "أذكار اليوم والليلة",
-              icon: Icons.wb_sunny_rounded,
+              title: "الأذكار اليومية",
+              icon: Icons.format_list_bulleted,
               color: primaryColor,
             ),
+
             SizedBox(height: screenHeight * 0.02),
+
+            // 2. شبكة الأذكار (Grid)
             FutureBuilder<List<AzkarCategoryModel>>(
               future: _azkarFuture,
               builder: (context, snapshot) {
@@ -90,19 +92,40 @@ class _AzkarPageState extends State<AzkarPage> {
                 );
               },
             ),
+
             SizedBox(height: screenHeight * 0.03),
+
+            // 3. قسم الأحاديث
             SectionTitle(
               title: "من هدي النبوة",
               icon: Icons.menu_book_rounded,
               color: accentColor,
             ),
+
             SizedBox(height: screenHeight * 0.02),
+
+            // 4. كارت الأحاديث (واحد بس)
             const HadithCard(),
-            SizedBox(height: screenHeight * 0.02),
-            const HadithCard(),
+
+            // مساحة أمان تحت عشان السكرول
+            const SizedBox(height: 20),
           ],
         ),
       ),
+    );
+  }
+
+  // دالة بناء الـ AppBar مفصولة عشان الكود يبقى نضيف
+  AppBar _buildAppBar(BuildContext context, bool isDark, Color primaryColor) {
+    return AppBar(
+      title: const Text(
+        "الأذكار والأحاديث",
+        style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
+      ),
+      centerTitle: true,
+      backgroundColor: isDark ? Colors.transparent : Colors.white,
+      elevation: 0,
+      foregroundColor: isDark ? Colors.white : primaryColor,
     );
   }
 
@@ -120,16 +143,6 @@ class _AzkarPageState extends State<AzkarPage> {
           ),
         ],
       ),
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      title: const Text(
-        "الأذكار والأحاديث",
-        style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
-      ),
-      centerTitle: true,
     );
   }
 }

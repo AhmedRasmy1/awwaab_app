@@ -10,18 +10,39 @@ class AzkarCategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = const Color(0xFF1B4332); // اللون الأساسي
+    final primaryColor = const Color(0xFF1B4332);
+    final screenSize = MediaQuery.of(context).size;
+    final isMobile = screenSize.width < 600;
 
-    // تحديد الأيقونة حسب القسم
     IconData iconData = Icons.spa;
-    if (category.category.contains("الصباح")) {
+    String catName = category.category;
+
+    if (catName.contains("الصباح")) {
       iconData = Icons.wb_sunny_outlined;
-    } else if (category.category.contains("المساء")) {
+    } else if (catName.contains("المساء")) {
       iconData = Icons.nightlight_round;
-    } else if (category.category.contains("الصلاة")) {
-      iconData = Icons.mosque;
-    } else if (category.category.contains("النوم")) {
+    } else if (catName.contains("النوم")) {
       iconData = Icons.bed;
+    } else if (catName.contains("الاستيقاظ")) {
+      iconData = Icons.alarm;
+    } else if (catName.contains("الصلاة") || catName.contains("الآذان")) {
+      iconData = Icons.mosque;
+    } else if (catName.contains("الوضوء")) {
+      iconData = Icons.water_drop;
+    } else if (catName.contains("المنزل")) {
+      iconData = Icons.home;
+    } else if (catName.contains("الطعام")) {
+      iconData = Icons.restaurant;
+    } else if (catName.contains("السفر")) {
+      iconData = Icons.flight;
+    } else if (catName.contains("الخلاء")) {
+      iconData = Icons.wc;
+    } else if (catName.contains("الهم") || catName.contains("الدين")) {
+      iconData = Icons.favorite;
+    } else if (catName.contains("المرض")) {
+      iconData = Icons.local_hospital;
+    } else if (catName.contains("الاستخارة")) {
+      iconData = Icons.done_all;
     }
 
     return GestureDetector(
@@ -39,7 +60,7 @@ class AzkarCategoryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
+              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -51,50 +72,42 @@ class AzkarCategoryCard extends StatelessWidget {
         clipBehavior: Clip.hardEdge,
         child: Stack(
           children: [
-            // ==========================================
-            // التعديل هنا: ضبط ألوان الزغرفة الخلفية
-            // ==========================================
             Positioned(
               left: -20,
               bottom: -20,
               child: Opacity(
-                // زودت الشفافية سنة بسيطة في اللايت عشان تبان أحلى
                 opacity: isDark ? 0.05 : 0.1,
                 child: Icon(
                   iconData,
-                  size: 100,
-                  // 👈 التركة هنا: لو دارك خليها أبيض، لو لايت خليها أخضر
+                  size: isMobile ? 80 : 100,
                   color: isDark ? Colors.white : primaryColor,
                 ),
               ),
             ),
-
-            // المحتوى
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(isMobile ? 12 : 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: EdgeInsets.all(isMobile ? 8 : 10),
                     decoration: BoxDecoration(
-                      color: primaryColor.withOpacity(0.1),
+                      color: primaryColor.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       iconData,
-                      color:
-                          primaryColor, // الأيقونة الصغيرة تفضل خضراء دايماً عشان التناسق
-                      size: 24,
+                      color: primaryColor,
+                      size: isMobile ? 20 : 24,
                     ),
                   ),
                   Text(
                     category.category,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Cairo',
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: isMobile ? 14 : 16,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
