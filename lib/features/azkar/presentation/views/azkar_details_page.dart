@@ -132,7 +132,7 @@ class _AzkarCardItemState extends State<AzkarCardItem>
             widget.azkarItem.text,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'Cairo',
+              fontFamily: 'AmiriQuran',
               fontSize: 18,
               height: 1.6,
               fontWeight: FontWeight.w600,

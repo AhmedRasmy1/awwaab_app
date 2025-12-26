@@ -96,3 +96,7 @@ flutter:
         - asset: assets/fonts/UthmanTN_v2-0.ttf
         - asset: assets/fonts/UthmanTNB_v2-0.ttf
           weight: 700      
+    - family: AmiriQuran
+      fonts:
+        - asset: assets/fonts/AmiriQuran-Regular.ttf
+          weight: 400        

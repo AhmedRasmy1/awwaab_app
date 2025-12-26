@@ -74,9 +74,10 @@ class _ZekrOfTimeCardState extends State<ZekrOfTimeCard> {
             "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 22,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
               color: primaryTextColor,
+              fontFamily: 'AmiriQuran',
             ),
           ),
 
