@@ -24,13 +24,12 @@ class _NextPrayerCardState extends State<NextPrayerCard> {
   @override
   void initState() {
     super.initState();
-    _calculateNextPrayer(); // 1. ابدأ الحساب أول ما الكارت يظهر
+    _calculateNextPrayer();
   }
 
   // دالة الحساب الرئيسية
   Future<void> _calculateNextPrayer() async {
     try {
-      // أ) هات الإحداثيات من الكاش
       final lat = CacheService.getData(key: 'cached_lat');
       final lng = CacheService.getData(key: 'cached_lng');
 
@@ -46,12 +45,10 @@ class _NextPrayerCardState extends State<NextPrayerCard> {
         return;
       }
 
-      // ب) إعدادات الحساب
       final coordinates = Coordinates(lat, lng);
       final params = CalculationMethod.egyptian.getParameters();
       params.madhab = Madhab.shafi;
 
-      // ج) حساب مواقيت اليوم وبكرة
       final now = DateTime.now();
       final todayComponents = DateComponents.from(now);
       final tomorrowComponents = DateComponents.from(
@@ -65,7 +62,6 @@ class _NextPrayerCardState extends State<NextPrayerCard> {
         params,
       );
 
-      // د) تحديد الصلاة القادمة
       Prayer next = todayPrayers.nextPrayer();
       DateTime? nextTime;
 
@@ -76,7 +72,6 @@ class _NextPrayerCardState extends State<NextPrayerCard> {
         nextTime = todayPrayers.timeForPrayer(next);
       }
 
-      // هـ) تحديث البيانات
       if (nextTime != null) {
         final diff = nextTime.difference(now);
 
@@ -159,10 +154,13 @@ class _NextPrayerCardState extends State<NextPrayerCard> {
         : Colors.grey.shade600;
     final iconBgColor = isDark ? Colors.white10 : const Color(0xFFE8ECE9);
 
+    // لون الباترن: نفس لون النص الأساسي بس شفاف جداً
+    final patternColor = primaryTextColor.withOpacity(isDark ? 0.05 : 0.08);
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.all(20),
+      clipBehavior: Clip.hardEdge, // عشان الصورة تتقص على قد الكارت
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(20),
@@ -175,108 +173,131 @@ class _NextPrayerCardState extends State<NextPrayerCard> {
           ),
         ],
       ),
-      child: _isLoading
-          ? Center(child: CircularProgressIndicator(color: primaryTextColor))
-          : _hasError
-          ? Center(
-              child: Text(
-                "يرجى تحديد الموقع من صفحة الصلاة",
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  color: secondaryTextColor,
-                ),
+      child: Stack(
+        children: [
+          // ============================================
+          // 🕌 الخلفية الإسلامية (الباترن)
+          // ============================================
+          Positioned.fill(
+            child: Opacity(
+              opacity: 1.0,
+              child: Image.asset(
+                'assets/images/islamic_pattern.png', // نفس الصورة اللي استخدمناها
+                fit: BoxFit.cover,
+                color: patternColor, // بنلونها بلون النص الأساسي
+                colorBlendMode: BlendMode.srcIn,
               ),
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "الصلاة القادمة",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: secondaryTextColor,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Cairo',
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-
-                    // اسم الصلاة الحقيقي
-                    Text(
-                      _nextPrayerName,
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w600,
-                        color: primaryTextColor,
-                        fontFamily: 'Cairo',
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-
-                    // وقت الصلاة الحقيقي
-                    Text(
-                      _nextPrayerTimeDisplay,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: primaryTextColor,
-                        fontFamily: 'Cairo',
-                      ),
-                    ),
-                  ],
-                ),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: iconBgColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.access_time_rounded,
-                          color: primaryTextColor,
-                          size: 30,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 30),
-
-                    // العداد التنازلي الحقيقي (جوه كونتينر شيك)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        // نفس لون خلفية الأيقونة عشان التناسق
-                        color: iconBgColor,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        "${_formatDuration(_remainingTime)}",
-                        style: TextStyle(
-                          fontSize: 14, // صغرنا الخط سنة عشان الكونتينر
-                          fontWeight: FontWeight.bold,
-                          // اللون الأساسي عشان يبرز جوه الكونتينر
-                          color: primaryTextColor,
-                          fontFamily: 'Cairo',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
             ),
+          ),
+
+          // ============================================
+          // المحتوى (نقلنا الـ Padding هنا)
+          // ============================================
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: _isLoading
+                ? Center(
+                    child: CircularProgressIndicator(color: primaryTextColor),
+                  )
+                : _hasError
+                ? Center(
+                    child: Text(
+                      "يرجى تحديد الموقع من صفحة الصلاة",
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        color: secondaryTextColor,
+                      ),
+                    ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "الصلاة القادمة",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: secondaryTextColor,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Cairo',
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+
+                          Text(
+                            _nextPrayerName,
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w600,
+                              color: primaryTextColor,
+                              fontFamily: 'Cairo',
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+
+                          Text(
+                            _nextPrayerTimeDisplay,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: primaryTextColor,
+                              fontFamily: 'Cairo',
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: iconBgColor,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.access_time_rounded,
+                                color: primaryTextColor,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 30),
+
+                          // العداد (جوه الكبسولة)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: iconBgColor,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              "${_formatDuration(_remainingTime)}",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: primaryTextColor,
+                                fontFamily: 'Cairo',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+          ),
+        ],
+      ),
     );
   }
 }
